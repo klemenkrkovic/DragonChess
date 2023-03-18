@@ -12,6 +12,7 @@ public class ChessGameController : MonoBehaviour
     [SerializeField] private BoardLayout startingBoardLayout;
     [SerializeField] private Board board;
     [SerializeField] private ChessUIManager uIManager;
+    [SerializeField] private Camera playerCamera;
 
     private PieceCreator pieceCreator;
     
@@ -31,8 +32,8 @@ public class ChessGameController : MonoBehaviour
     }
     private void CreatePlayers()
     {
-        whitePlayer = new ChessPlayer(TeamColor.White, board);
-        blackPlayer = new ChessPlayer(TeamColor.Black, board);
+        whitePlayer = new ChessPlayer(TeamColor.White, board, new Vector3(9.25f, 9.75f, -24.6f));
+        blackPlayer = new ChessPlayer(TeamColor.Black, board, new Vector3(9.25f, 10.15f, -10.77f));
     }
 
 
@@ -173,7 +174,20 @@ public class ChessGameController : MonoBehaviour
     {
         activePlayer = activePlayer == whitePlayer ? blackPlayer : whitePlayer;
 
-        Debug.Log(activePlayer);
+        if (activePlayer == whitePlayer)
+        {
+            playerCamera.transform.position = whitePlayer.cameraPosition;
+            playerCamera.transform.Rotate(0, 180, 0, Space.World);
+            
+        }
+        else if (activePlayer == blackPlayer)
+        {
+            playerCamera.transform.position = blackPlayer.cameraPosition;
+            playerCamera.transform.Rotate(0, 180, 0, Space.World);
+        }
+
+
+        Debug.Log(activePlayer.team);
     }
 
     public void RemoveMovesEnablingAttackOnPieceOfType<T>(Piece piece) where T : Piece

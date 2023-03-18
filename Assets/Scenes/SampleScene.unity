@@ -2343,7 +2343,7 @@ PrefabInstance:
       objectReference: {fileID: 748281226}
     - target: {fileID: 2849464352493460608, guid: 4704ece9eebb5eb499e06436828607a0, type: 3}
       propertyPath: m_VersionIndex
-      value: 55
+      value: 58
       objectReference: {fileID: 0}
     - target: {fileID: 2893902698078764591, guid: 4704ece9eebb5eb499e06436828607a0, type: 3}
       propertyPath: m_RootOrder
@@ -3539,7 +3539,7 @@ PrefabInstance:
       objectReference: {fileID: 985430645}
     - target: {fileID: 8259086666718474075, guid: 4704ece9eebb5eb499e06436828607a0, type: 3}
       propertyPath: m_VersionIndex
-      value: 112
+      value: 115
       objectReference: {fileID: 0}
     - target: {fileID: 8259515259848136343, guid: 4704ece9eebb5eb499e06436828607a0, type: 3}
       propertyPath: m_Mesh
@@ -10075,7 +10075,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1252
+  m_Name: pb_Mesh-1242
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -13984,7 +13984,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1240
+  m_Name: pb_Mesh-1230
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -21783,6 +21783,7 @@ MonoBehaviour:
   startingBoardLayout: {fileID: 11400000, guid: c43478c1d2da5a641b721342b0913fe8, type: 2}
   board: {fileID: 158480771}
   uIManager: {fileID: 296381485}
+  playerCamera: {fileID: 963194227}
 --- !u!114 &1689250223
 MonoBehaviour:
   m_ObjectHideFlags: 0

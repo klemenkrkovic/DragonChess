@@ -10,11 +10,14 @@ public class ChessPlayer
     public Board board { get; set; }
     public List<Piece> activePieces { get; private set; }
 
+    public Vector3 cameraPosition { get; set; }
 
-    public ChessPlayer(TeamColor team, Board board)
+
+    public ChessPlayer(TeamColor team, Board board, Vector3 cameraPosition)
     {
         this.board = board;
         this.team = team;
+        this.cameraPosition = cameraPosition;
         activePieces = new List<Piece>();
     }
 

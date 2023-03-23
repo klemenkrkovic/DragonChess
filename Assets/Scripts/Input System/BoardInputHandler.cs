@@ -11,6 +11,7 @@ public class BoardInputHandler : MonoBehaviour, IInputHandler
     private void Awake()
     {
         board = GetComponent<Board>();
+        Debug.Log(board);
     }
 
     public void ProcessInput(Vector3 inputPosition, GameObject selectedObject, Action onClick)

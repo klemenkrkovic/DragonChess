@@ -13818,6 +13818,18 @@ MonoBehaviour:
   freeSquareMaterial: {fileID: 2100000, guid: 162f1235538e10c489021af193cfb930, type: 2}
   OpponentSquareMaterial: {fileID: 2100000, guid: 5324fc0fbaa964c44b7de3ade0c19ad0, type: 2}
   selectorPrefab: {fileID: 6038340394534464832, guid: d746d64962637094ebb203194015cc84, type: 3}
+--- !u!114 &929073326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929073322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b36475bf4b0822f4e8f3e8a6e1327b64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &929761132
 Mesh:
   m_ObjectHideFlags: 0
@@ -17782,6 +17794,18 @@ MonoBehaviour:
   freeSquareMaterial: {fileID: 2100000, guid: 162f1235538e10c489021af193cfb930, type: 2}
   OpponentSquareMaterial: {fileID: 2100000, guid: 5324fc0fbaa964c44b7de3ade0c19ad0, type: 2}
   selectorPrefab: {fileID: 6038340394534464832, guid: d746d64962637094ebb203194015cc84, type: 3}
+--- !u!114 &1202634519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202634515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b36475bf4b0822f4e8f3e8a6e1327b64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &1206947933
 Mesh:
   m_ObjectHideFlags: 0
@@ -22767,8 +22791,8 @@ MonoBehaviour:
   skyBoard: {fileID: 1202634517}
   groundBoard: {fileID: 158480771}
   underworldBoard: {fileID: 929073324}
-  skyBoardLayout: {fileID: 11400000, guid: c43478c1d2da5a641b721342b0913fe8, type: 2}
-  groundBoardLayout: {fileID: 11400000, guid: c43478c1d2da5a641b721342b0913fe8, type: 2}
+  skyBoardLayout: {fileID: 11400000, guid: 980fb914be8e7204c8a483f2af39841a, type: 2}
+  groundBoardLayout: {fileID: 11400000, guid: c835f811b3d521f4ebcecec6c40607c6, type: 2}
   underworldBoardLayout: {fileID: 11400000, guid: c43478c1d2da5a641b721342b0913fe8, type: 2}
   uIManager: {fileID: 296381485}
   playerCamera: {fileID: 963194227}

@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\Utils\MaterialSetter.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\SquareSelectorCreator.cs" />
     <Compile Include="Assets\ChessUIManager.cs" />
+    <Compile Include="Assets\Scripts\Input System\ScrollInputReceiver.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\Pieces\Knight.cs" />
     <Compile Include="Assets\Scripts\Tweeners\InstantTweener.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\Pieces\Rook.cs" />
@@ -86,7 +87,6 @@
     <Compile Include="Assets\Scripts\Chess_Game\PiecesCreator.cs" />
     <Compile Include="Assets\Scripts\Tweeners\IObjectTweener.cs" />
     <Compile Include="Assets\Scripts\Input System\InputReceiver.cs" />
-    <Compile Include="Assets\Scripts\Input System\ScrollInputReceiver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

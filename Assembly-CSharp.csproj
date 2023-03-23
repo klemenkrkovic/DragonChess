@@ -86,6 +86,7 @@
     <Compile Include="Assets\Scripts\Chess_Game\PiecesCreator.cs" />
     <Compile Include="Assets\Scripts\Tweeners\IObjectTweener.cs" />
     <Compile Include="Assets\Scripts\Input System\InputReceiver.cs" />
+    <Compile Include="Assets\Scripts\Input System\ScrollInputReceiver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

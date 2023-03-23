@@ -360,6 +360,7 @@
 "Assets/Scripts/Input System/ColliderInputReceiver.cs"
 "Assets/Scripts/Input System/IInputHandler.cs"
 "Assets/Scripts/Input System/InputReceiver.cs"
+"Assets/Scripts/Input System/ScrollInputReceiver.cs"
 "Assets/Scripts/Input System/UIInputHandler.cs"
 "Assets/Scripts/Input System/UIInputReceiver.cs"
 "Assets/Scripts/Tweeners/ArcTweener.cs"

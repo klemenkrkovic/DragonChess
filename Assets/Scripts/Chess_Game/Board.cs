@@ -89,7 +89,7 @@ public class Board : MonoBehaviour
     internal void PromotePiece(Piece piece)
     {
         TakePiece(piece);
-        chessController.CreatePieceAndInitialize(piece.occupiedSquare, piece.team, typeof(Queen));
+        chessController.CreatePieceAndInitialize(piece.occupiedSquare, piece.team, typeof(Queen), this);
     }
 
     private void SelectPiece(Piece piece)
@@ -109,7 +109,7 @@ public class Board : MonoBehaviour
             bool isSquareFree = GetPieceOnSquare(selection[i]) == null;
             squaresData.Add(position, isSquareFree);
         }
-        squareSelector.ShowSelection(squaresData);
+        squareSelector.ShowSelection(squaresData, this);
     }
 
     private void DeselectPiece()

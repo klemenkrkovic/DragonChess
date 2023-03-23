@@ -19,12 +19,12 @@ public class PieceCreator : MonoBehaviour
         }
     }
 
-    public GameObject CreatePiece(Type type)
+    public GameObject CreatePiece(Type type, Transform board)
     {
         GameObject prefab = nameToPieceDict[type.ToString()];
         if (prefab)
         {
-            GameObject newPiece = Instantiate(prefab);
+            GameObject newPiece = Instantiate(prefab, board);
             return newPiece;
         }
         return null;

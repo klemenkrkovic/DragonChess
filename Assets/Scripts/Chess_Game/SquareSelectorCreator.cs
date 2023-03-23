@@ -11,12 +11,12 @@ public class SquareSelectorCreator : MonoBehaviour
 
     private List<GameObject> instantiatedSelectors = new List<GameObject>();
 
-    public void ShowSelection(Dictionary<Vector3, bool> squareData)
+    public void ShowSelection(Dictionary<Vector3, bool> squareData, Board board)
     {
         ClearSelection();
         foreach (var data in squareData)
         {
-            GameObject selector = Instantiate(selectorPrefab, data.Key, Quaternion.identity);
+            GameObject selector = Instantiate(selectorPrefab, data.Key, Quaternion.identity, board.transform);
             instantiatedSelectors.Add(selector);
             foreach (var setter in selector.GetComponentsInChildren<MaterialSetter>())
             {

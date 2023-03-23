@@ -7,15 +7,19 @@ using UnityEngine;
 public class ChessPlayer
 {
     public TeamColor team { get; set; }
-    public Board board { get; set; }
+    public Board skyBoard { get; set; }
+    public Board groundBoard { get; set; }
+    public Board underworldBoard { get; set; }
     public List<Piece> activePieces { get; private set; }
 
     public Vector3 cameraPosition { get; set; }
 
 
-    public ChessPlayer(TeamColor team, Board board, Vector3 cameraPosition)
+    public ChessPlayer(TeamColor team, Board skyBoard, Board groundBoard, Board underworldBoard, Vector3 cameraPosition)
     {
-        this.board = board;
+        this.skyBoard = skyBoard;
+        this.groundBoard = groundBoard;
+        this.underworldBoard = underworldBoard;
         this.team = team;
         this.cameraPosition = cameraPosition;
         activePieces = new List<Piece>();
@@ -37,7 +41,17 @@ public class ChessPlayer
     {
         foreach(var piece in activePieces)
         {
-            if (board.HasPiece(piece))
+            if (skyBoard.HasPiece(piece))
+                piece.SelectAvailableSquares();
+        }
+        foreach (var piece in activePieces)
+        {
+            if (groundBoard.HasPiece(piece))
+                piece.SelectAvailableSquares();
+        }
+        foreach (var piece in activePieces)
+        {
+            if (underworldBoard.HasPiece(piece))
                 piece.SelectAvailableSquares();
         }
     }
@@ -53,17 +67,18 @@ public class ChessPlayer
         return activePieces.Where(p => p is T).ToArray();
     }
 
+    // NOT DONE
     public void RemoveMovesEnablingAttackOnPieceOfType<T>(ChessPlayer opponent, Piece selectedPiece) where T : Piece
     {
         List<Vector2Int> coordsToRemove = new List<Vector2Int>();
         foreach (var coords in selectedPiece.availableMoves)
         {
-            Piece pieceOnCoords = board.GetPieceOnSquare(coords);
-            board.UpdateBoardOnPieceMove(coords, selectedPiece.occupiedSquare, selectedPiece, null);
+            Piece pieceOnCoords = groundBoard.GetPieceOnSquare(coords);
+            groundBoard.UpdateBoardOnPieceMove(coords, selectedPiece.occupiedSquare, selectedPiece, null);
             opponent.GenerateAllPossibleMoves();
             if (opponent.CheckIfIsAttackingPiece<T>())
                 coordsToRemove.Add(coords);
-            board.UpdateBoardOnPieceMove(selectedPiece.occupiedSquare, coords, selectedPiece, pieceOnCoords);
+            groundBoard.UpdateBoardOnPieceMove(selectedPiece.occupiedSquare, coords, selectedPiece, pieceOnCoords);
         }
         foreach(var coords in coordsToRemove)
         {
@@ -76,11 +91,12 @@ public class ChessPlayer
         activePieces.Clear();
     }
 
+    // NOT DONE
     private bool CheckIfIsAttackingPiece<T>() where T : Piece
     {
         foreach (var piece in activePieces)
         {
-            if(board.HasPiece(piece) && piece.IsAttackingPieceOfType<T>())
+            if(groundBoard.HasPiece(piece) && piece.IsAttackingPieceOfType<T>())
             {
                 return true;
             }
@@ -88,21 +104,22 @@ public class ChessPlayer
         return false;
     }
 
+    // NOT DONE
     internal bool CanHidePieceFromAttack<T>(ChessPlayer opponent) where T : Piece
     {
         foreach (var piece in activePieces)
         {
             foreach (var coords in piece.availableMoves)
             {
-                Piece pieceOnCoords = board.GetPieceOnSquare(coords);
-                board.UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null);
+                Piece pieceOnCoords = groundBoard.GetPieceOnSquare(coords);
+                groundBoard.UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null);
                 opponent.GenerateAllPossibleMoves();
                 if (!opponent.CheckIfIsAttackingPiece<T>())
                 {
-                    board.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, null);
+                    groundBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, null);
                     return true;
                 }
-                board.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, pieceOnCoords);
+                groundBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, pieceOnCoords);
             }
         }
         return false;

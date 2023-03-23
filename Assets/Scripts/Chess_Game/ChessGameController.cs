@@ -9,8 +9,16 @@ public class ChessGameController : MonoBehaviour
 {
     private enum GameState { Init, Play, Finished }
 
-    [SerializeField] private BoardLayout startingBoardLayout;
-    [SerializeField] private Board board;
+    
+    [SerializeField] private Board skyBoard;
+    [SerializeField] private Board groundBoard;
+    [SerializeField] private Board underworldBoard;
+
+    [SerializeField] private BoardLayout skyBoardLayout;
+    [SerializeField] private BoardLayout groundBoardLayout;
+    [SerializeField] private BoardLayout underworldBoardLayout;
+
+
     [SerializeField] private ChessUIManager uIManager;
     [SerializeField] private Camera playerCamera;
 
@@ -32,8 +40,8 @@ public class ChessGameController : MonoBehaviour
     }
     private void CreatePlayers()
     {
-        whitePlayer = new ChessPlayer(TeamColor.White, board, new Vector3(9.25f, 9.75f, -24.6f));
-        blackPlayer = new ChessPlayer(TeamColor.Black, board, new Vector3(9.25f, 10.15f, -10.77f));
+        whitePlayer = new ChessPlayer(TeamColor.White, skyBoard, groundBoard, underworldBoard, new Vector3(3.87f, 10.17f, -6.84f));
+        blackPlayer = new ChessPlayer(TeamColor.Black, skyBoard, groundBoard, underworldBoard, new Vector3(3.87f, 10.17f, 7.63f));
     }
 
 
@@ -47,8 +55,15 @@ public class ChessGameController : MonoBehaviour
     {
         uIManager.HideUI();
         SetGameState(GameState.Init);
-        board.SetDependencies(this);
-        CreatePiecesFromLayout(startingBoardLayout);
+
+        skyBoard.SetDependencies(this);
+        groundBoard.SetDependencies(this);
+        underworldBoard.SetDependencies(this);
+
+        CreatePiecesFromLayout(skyBoardLayout, skyBoard);
+        CreatePiecesFromLayout(groundBoardLayout, groundBoard);
+        CreatePiecesFromLayout(underworldBoardLayout, underworldBoard);
+
         activePlayer = whitePlayer;
         GenerateAllPossiblePlayerMoves(activePlayer);
         SetGameState(GameState.Play);
@@ -59,10 +74,22 @@ public class ChessGameController : MonoBehaviour
     public void RestartGame()
     {
         DestroyPieces();
-        board.OnGameRestarted();
+        skyBoard.OnGameRestarted();
+        groundBoard.OnGameRestarted();
+        underworldBoard.OnGameRestarted();
         whitePlayer.OnGameRestarted();
         blackPlayer.OnGameRestarted();
+        ResetCamera();
         StartNewGame();
+    }
+
+    private void ResetCamera()
+    {
+        if (activePlayer == blackPlayer)
+        {
+            playerCamera.transform.position = whitePlayer.cameraPosition;
+            playerCamera.transform.Rotate(0, 180, 0, Space.World);
+        }
     }
 
     private void DestroyPieces()
@@ -81,7 +108,7 @@ public class ChessGameController : MonoBehaviour
         return state == GameState.Play;
     }
 
-    private void CreatePiecesFromLayout(BoardLayout layout)
+    private void CreatePiecesFromLayout(BoardLayout layout, Board board)
     {
         for (int i = 0; i < layout.GetPiecesCount(); i++)
         {
@@ -90,16 +117,16 @@ public class ChessGameController : MonoBehaviour
             string typeName = layout.GetSquarePieceNameAtIndex(i);
 
             Type type = Type.GetType(typeName);
-            CreatePieceAndInitialize(squareCoords, team, type);
+            CreatePieceAndInitialize(squareCoords, team, type, board);
         }
 
         
     }
 
 
-    public void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
+    public void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type, Board board)
     {
-        Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
+        Piece newPiece = pieceCreator.CreatePiece(type, board.transform).GetComponent<Piece>();
         newPiece.SetData(squareCoords, team, board);
 
         Material teamMaterial = pieceCreator.GetTeamMaterial(team);

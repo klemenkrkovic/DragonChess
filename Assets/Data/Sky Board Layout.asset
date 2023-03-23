@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6863ce926d239db4e8d18fd40607921c, type: 3}
-  m_Name: Starting Board Layout
+  m_Name: Sky Board Layout
   m_EditorClassIdentifier: 
   boardSquares:
   - position: {x: 1, y: 1}
@@ -26,7 +26,7 @@ MonoBehaviour:
     pieceType: 4
     teamColor: 1
   - position: {x: 5, y: 1}
-    pieceType: 5
+    pieceType: 4
     teamColor: 1
   - position: {x: 6, y: 1}
     pieceType: 1
@@ -36,30 +36,6 @@ MonoBehaviour:
     teamColor: 1
   - position: {x: 8, y: 1}
     pieceType: 3
-    teamColor: 1
-  - position: {x: 1, y: 2}
-    pieceType: 0
-    teamColor: 1
-  - position: {x: 2, y: 2}
-    pieceType: 0
-    teamColor: 1
-  - position: {x: 3, y: 2}
-    pieceType: 0
-    teamColor: 1
-  - position: {x: 4, y: 2}
-    pieceType: 0
-    teamColor: 1
-  - position: {x: 5, y: 2}
-    pieceType: 0
-    teamColor: 1
-  - position: {x: 6, y: 2}
-    pieceType: 0
-    teamColor: 1
-  - position: {x: 7, y: 2}
-    pieceType: 0
-    teamColor: 1
-  - position: {x: 8, y: 2}
-    pieceType: 0
     teamColor: 1
   - position: {x: 1, y: 8}
     pieceType: 3
@@ -74,7 +50,7 @@ MonoBehaviour:
     pieceType: 4
     teamColor: 0
   - position: {x: 5, y: 8}
-    pieceType: 5
+    pieceType: 4
     teamColor: 0
   - position: {x: 6, y: 8}
     pieceType: 1
@@ -84,28 +60,4 @@ MonoBehaviour:
     teamColor: 0
   - position: {x: 8, y: 8}
     pieceType: 3
-    teamColor: 0
-  - position: {x: 1, y: 7}
-    pieceType: 0
-    teamColor: 0
-  - position: {x: 2, y: 7}
-    pieceType: 0
-    teamColor: 0
-  - position: {x: 3, y: 7}
-    pieceType: 0
-    teamColor: 0
-  - position: {x: 4, y: 7}
-    pieceType: 0
-    teamColor: 0
-  - position: {x: 5, y: 7}
-    pieceType: 0
-    teamColor: 0
-  - position: {x: 6, y: 7}
-    pieceType: 0
-    teamColor: 0
-  - position: {x: 7, y: 7}
-    pieceType: 0
-    teamColor: 0
-  - position: {x: 8, y: 7}
-    pieceType: 0
     teamColor: 0

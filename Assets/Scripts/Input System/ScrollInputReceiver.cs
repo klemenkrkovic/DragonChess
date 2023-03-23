@@ -6,7 +6,7 @@ using UnityEngine;
 public class ScrollInputReceiver : MonoBehaviour
 {
     [SerializeField] private Transform boardAnchor;
-
+    [SerializeField] private ChessGameController gameController;
 
 
     // Update is called once per frame
@@ -22,6 +22,9 @@ public class ScrollInputReceiver : MonoBehaviour
             {
                 boardAnchor.Translate(Vector3.up * 11);
             }
+
+            //Debug.Log(Input.mouseScrollDelta.y);
+            gameController.ChangeActiveBoard(Input.mouseScrollDelta.y);
         }
     }
 }

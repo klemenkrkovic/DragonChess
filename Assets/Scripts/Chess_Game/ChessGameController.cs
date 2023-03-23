@@ -26,7 +26,9 @@ public class ChessGameController : MonoBehaviour
     
     private ChessPlayer whitePlayer;
     private ChessPlayer blackPlayer;
+
     private ChessPlayer activePlayer;
+    public Board activeBoard;
     private GameState state;
 
     private void Awake()
@@ -40,8 +42,8 @@ public class ChessGameController : MonoBehaviour
     }
     private void CreatePlayers()
     {
-        whitePlayer = new ChessPlayer(TeamColor.White, skyBoard, groundBoard, underworldBoard, new Vector3(3.87f, 10.17f, -6.84f));
-        blackPlayer = new ChessPlayer(TeamColor.Black, skyBoard, groundBoard, underworldBoard, new Vector3(3.87f, 10.17f, 7.63f));
+        whitePlayer = new ChessPlayer(TeamColor.White, skyBoard, groundBoard, underworldBoard, new Vector3(3.43f, 10.17f, -6.84f));
+        blackPlayer = new ChessPlayer(TeamColor.Black, skyBoard, groundBoard, underworldBoard, new Vector3(3.43f, 10.17f, 7.63f));
     }
 
 
@@ -65,6 +67,8 @@ public class ChessGameController : MonoBehaviour
         CreatePiecesFromLayout(underworldBoardLayout, underworldBoard);
 
         activePlayer = whitePlayer;
+        activeBoard = groundBoard;
+
         GenerateAllPossiblePlayerMoves(activePlayer);
         SetGameState(GameState.Play);
         Debug.Log("Game STARTED");
@@ -118,9 +122,7 @@ public class ChessGameController : MonoBehaviour
 
             Type type = Type.GetType(typeName);
             CreatePieceAndInitialize(squareCoords, team, type, board);
-        }
-
-        
+        } 
     }
 
 
@@ -212,9 +214,29 @@ public class ChessGameController : MonoBehaviour
             playerCamera.transform.position = blackPlayer.cameraPosition;
             playerCamera.transform.Rotate(0, 180, 0, Space.World);
         }
+    }
 
+    public void ChangeActiveBoard(float scroll)
+    {
+        if (activeBoard == skyBoard)
+        {
+            if (scroll < 0)
+                activeBoard = groundBoard;
+        }
+        else if (activeBoard == groundBoard)
+        {
+            if (scroll > 0)
+                activeBoard = skyBoard;
+            else if (scroll < 0)
+                activeBoard = underworldBoard;
+        }
+        else if (activeBoard == underworldBoard)
+        {
+            if (scroll > 0)
+                activeBoard = groundBoard;
+        }
 
-        Debug.Log(activePlayer.team);
+        Debug.Log(activeBoard);
     }
 
     public void RemoveMovesEnablingAttackOnPieceOfType<T>(Piece piece) where T : Piece

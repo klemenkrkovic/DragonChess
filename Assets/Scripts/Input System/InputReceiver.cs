@@ -11,5 +11,7 @@ public abstract class InputReceiver : MonoBehaviour
     private void Awake()
     {
         inputHandlers = GetComponents<IInputHandler>();
+
+        Debug.Log(inputHandlers[0]);
     }
 }

@@ -5,42 +5,59 @@ using UnityEngine;
 
 public class Pawn : Piece
 {
-    public override List<Vector2Int> SelectAvailableSquares()
+
+    public override List<Vector2Int> SelectAvailableSkySquares()
     {
-        availableMoves.Clear();
+        return availableSkyMoves;
+    }
+    public override List<Vector2Int> SelectAvailableGroundSquares()
+    {
+        availableGroundMoves.Clear();
         Vector2Int direction = team == TeamColor.White ? Vector2Int.up : Vector2Int.down;
-        float range = hasMoved ? 1 : 2;
+        float range = 1;
         for (int i =1; i <= range; i++)
         {
-            Vector2Int nextCoords = occupiedSquare + direction * i;
-            Piece piece = board.GetPieceOnSquare(nextCoords);
-            if (!board.CheckIfCoordinatesAreOnBoard(nextCoords))
-                break;
+            Vector2Int nextCoords = occupiedSquare + direction;
+            Piece piece = groundBoard.GetPieceOnSquare(nextCoords);
             if (piece == null)
-                TryToAddMove(nextCoords);
-            else if (piece.IsFromSameTeam(this))
-                break;
+                TryToAddGroundMove(nextCoords);
         }
 
         Vector2Int[] takeDirections = new Vector2Int[] { new Vector2Int(1, direction.y), new Vector2Int(-1, direction.y) };
         for (int i = 0; i < takeDirections.Length; i++)
         {
             Vector2Int nextCoords = occupiedSquare + takeDirections[i];
-            Piece piece = board.GetPieceOnSquare(nextCoords);
-            if (!board.CheckIfCoordinatesAreOnBoard(nextCoords))
+            Piece piece = groundBoard.GetPieceOnSquare(nextCoords);
+            if (!groundBoard.CheckIfCoordinatesAreOnBoard(nextCoords))
                 continue;
             if (piece != null && !piece.IsFromSameTeam(this))
             {
-                TryToAddMove(nextCoords);
+                TryToAddGroundMove(nextCoords);
             }
         }
 
-        return availableMoves;
+        return availableGroundMoves;
     }
 
-    public override void MovePiece(Vector2Int coords)
+    public override List<Vector2Int> SelectAvailableUnderworldSquares()
     {
-        base.MovePiece(coords);
+        availableUnderworldMoves.Clear();
+        Vector2Int direction = team == TeamColor.White ? Vector2Int.up : Vector2Int.down;
+        float range = 1;
+        for (int i = 1; i <= range; i++)
+        {
+            Vector2Int nextCoords = occupiedSquare + direction;
+            Piece piece = underworldBoard.GetPieceOnSquare(nextCoords);
+            if (piece == null)
+                TryToAddUnderworldMove(nextCoords);
+        }
+
+        return availableUnderworldMoves;
+    }
+
+    public override void MovePiece(Vector2Int coords, Board groundBoard)
+    {
+        base.MovePiece(coords, groundBoard);
         CheckPromotion();
     }
 
@@ -49,6 +66,6 @@ public class Pawn : Piece
         int endOfBoardYCoord = team == TeamColor.White ? Board.BOARD_SIZE_Y - 1 : 0;
 
         if (occupiedSquare.y == endOfBoardYCoord)
-            board.PromotePiece(this);
+            groundBoard.PromotePiece(this);
     }
 }

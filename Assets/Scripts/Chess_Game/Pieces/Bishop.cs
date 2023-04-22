@@ -11,29 +11,40 @@ public class Bishop : Piece
         new Vector2Int(-1, 1),
         new Vector2Int(-1, -1)
     };
-    public override List<Vector2Int> SelectAvailableSquares()
+
+    public override List<Vector2Int> SelectAvailableSkySquares()
     {
-        availableMoves.Clear();
+        return availableSkyMoves;
+    }
+
+    public override List<Vector2Int> SelectAvailableGroundSquares()
+    {
+        availableGroundMoves.Clear();
         float range = Board.BOARD_SIZE_Y;   // the piece cannot move more than than 8 squares anyway
         foreach (var direction in directions_diagonal)
         {
             for (int i = 1; i <= range; i++)
             {
                 Vector2Int nextCoords = occupiedSquare + direction * i;
-                Piece piece = board.GetPieceOnSquare(nextCoords);
-                if (!board.CheckIfCoordinatesAreOnBoard(nextCoords))
+                Piece piece = groundBoard.GetPieceOnSquare(nextCoords);
+                if (!groundBoard.CheckIfCoordinatesAreOnBoard(nextCoords))
                     break;
                 if (piece == null)
-                    TryToAddMove(nextCoords);
+                    TryToAddGroundMove(nextCoords);
                 else if (!piece.IsFromSameTeam(this))
                 {
-                    TryToAddMove(nextCoords);
+                    TryToAddGroundMove(nextCoords);
                     break;
                 }
                 else if (piece.IsFromSameTeam(this))
                     break;
             }
         }
-        return availableMoves;
+        return availableGroundMoves;
+    }
+
+    public override List<Vector2Int> SelectAvailableUnderworldSquares()
+    {
+        return availableUnderworldMoves;
     }
 }

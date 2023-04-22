@@ -12,9 +12,15 @@ public class Rook : Piece
     {
         Vector2Int.up, Vector2Int.down
     };
-    public override List<Vector2Int> SelectAvailableSquares()
+
+    public override List<Vector2Int> SelectAvailableSkySquares()
     {
-        availableMoves.Clear();
+        return availableSkyMoves;
+    }
+
+    public override List<Vector2Int> SelectAvailableGroundSquares()
+    {
+        availableGroundMoves.Clear();
         float rangeX = Board.BOARD_SIZE_X;
         float rangeY = Board.BOARD_SIZE_Y;
 
@@ -24,14 +30,14 @@ public class Rook : Piece
             for (int i = 1; i <= rangeY; i++)
             {
                 Vector2Int nextCoords = occupiedSquare + directionY * i;
-                Piece piece = board.GetPieceOnSquare(nextCoords);
-                if (!board.CheckIfCoordinatesAreOnBoard(nextCoords))
+                Piece piece = groundBoard.GetPieceOnSquare(nextCoords);
+                if (!groundBoard.CheckIfCoordinatesAreOnBoard(nextCoords))
                     break;
                 if (piece == null)
-                    TryToAddMove(nextCoords);
+                    TryToAddGroundMove(nextCoords);
                 else if (!piece.IsFromSameTeam(this))
                 {
-                    TryToAddMove(nextCoords);
+                    TryToAddGroundMove(nextCoords);
                     break;
                 }
                 else if (piece.IsFromSameTeam(this))
@@ -45,21 +51,26 @@ public class Rook : Piece
             for (int i = 1; i <= rangeX; i++)
             {
                 Vector2Int nextCoords = occupiedSquare + directionX * i;
-                Piece piece = board.GetPieceOnSquare(nextCoords);
-                if (!board.CheckIfCoordinatesAreOnBoard(nextCoords))
+                Piece piece = groundBoard.GetPieceOnSquare(nextCoords);
+                if (!groundBoard.CheckIfCoordinatesAreOnBoard(nextCoords))
                     break;
                 if (piece == null)
-                    TryToAddMove(nextCoords);
+                    TryToAddGroundMove(nextCoords);
                 else if (!piece.IsFromSameTeam(this))
                 {
-                    TryToAddMove(nextCoords);
+                    TryToAddGroundMove(nextCoords);
                     break;
                 }
                 else if (piece.IsFromSameTeam(this))
                     break;
             }
         }
-        return availableMoves;
+        return availableGroundMoves;
+    }
+
+    public override List<Vector2Int> SelectAvailableUnderworldSquares()
+    {
+        return availableUnderworldMoves;
     }
 }
 

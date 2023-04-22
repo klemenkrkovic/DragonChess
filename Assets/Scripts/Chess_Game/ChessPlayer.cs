@@ -37,22 +37,14 @@ public class ChessPlayer
             activePieces.Remove(piece);
     }
 
+    // MIGHT NOT DONE
     public void GenerateAllPossibleMoves()
     {
-        foreach(var piece in activePieces)
-        {
-            if (skyBoard.HasPiece(piece))
-                piece.SelectAvailableSquares();
-        }
         foreach (var piece in activePieces)
         {
-            if (groundBoard.HasPiece(piece))
-                piece.SelectAvailableSquares();
-        }
-        foreach (var piece in activePieces)
-        {
-            if (underworldBoard.HasPiece(piece))
-                piece.SelectAvailableSquares();
+            piece.SelectAvailableSkySquares();
+            piece.SelectAvailableGroundSquares();
+            piece.SelectAvailableUnderworldSquares();
         }
     }
 
@@ -67,22 +59,57 @@ public class ChessPlayer
         return activePieces.Where(p => p is T).ToArray();
     }
 
-    // NOT DONE
     public void RemoveMovesEnablingAttackOnPieceOfType<T>(ChessPlayer opponent, Piece selectedPiece) where T : Piece
     {
         List<Vector2Int> coordsToRemove = new List<Vector2Int>();
-        foreach (var coords in selectedPiece.availableMoves)
+        foreach (var coords in selectedPiece.availableSkyMoves)
         {
-            Piece pieceOnCoords = groundBoard.GetPieceOnSquare(coords);
-            groundBoard.UpdateBoardOnPieceMove(coords, selectedPiece.occupiedSquare, selectedPiece, null);
+            Board selectedPieceOriginalBoard = selectedPiece.occupiedBoard;
+            bool pieceIsFromThisBoard = (selectedPiece.occupiedBoard == skyBoard) ? true : false;
+            Piece pieceOnCoords = skyBoard.GetPieceOnSquare(coords);
+
+            skyBoard.UpdateBoardOnPieceMove(coords, selectedPiece.occupiedSquare, selectedPiece, null, selectedPiece.occupiedBoard, pieceIsFromThisBoard);
+            selectedPiece.occupiedBoard = skyBoard;
+
             opponent.GenerateAllPossibleMoves();
             if (opponent.CheckIfIsAttackingPiece<T>())
                 coordsToRemove.Add(coords);
-            groundBoard.UpdateBoardOnPieceMove(selectedPiece.occupiedSquare, coords, selectedPiece, pieceOnCoords);
+            selectedPieceOriginalBoard.UpdateBoardOnPieceMove(selectedPiece.occupiedSquare, coords, selectedPiece, pieceOnCoords, selectedPiece.occupiedBoard, pieceIsFromThisBoard);
+            selectedPiece.occupiedBoard = selectedPieceOriginalBoard;
+        }
+        foreach (var coords in selectedPiece.availableGroundMoves)
+        {
+            Board selectedPieceOriginalBoard = selectedPiece.occupiedBoard;
+            bool pieceIsFromThisBoard = (selectedPiece.occupiedBoard == groundBoard) ? true : false;
+            Piece pieceOnCoords = groundBoard.GetPieceOnSquare(coords);
+
+            groundBoard.UpdateBoardOnPieceMove(coords, selectedPiece.occupiedSquare, selectedPiece, null, selectedPiece.occupiedBoard, pieceIsFromThisBoard);
+            selectedPiece.occupiedBoard = groundBoard;
+
+            opponent.GenerateAllPossibleMoves();
+            if (opponent.CheckIfIsAttackingPiece<T>())
+                coordsToRemove.Add(coords);
+            selectedPieceOriginalBoard.UpdateBoardOnPieceMove(selectedPiece.occupiedSquare, coords, selectedPiece, pieceOnCoords, selectedPiece.occupiedBoard, pieceIsFromThisBoard);
+            selectedPiece.occupiedBoard = selectedPieceOriginalBoard;
+        }
+        foreach (var coords in selectedPiece.availableUnderworldMoves)
+        {
+            Board selectedPieceOriginalBoard = selectedPiece.occupiedBoard;
+            bool pieceIsFromThisBoard = (selectedPiece.occupiedBoard == underworldBoard) ? true : false;
+            Piece pieceOnCoords = underworldBoard.GetPieceOnSquare(coords);
+
+            underworldBoard.UpdateBoardOnPieceMove(coords, selectedPiece.occupiedSquare, selectedPiece, null, selectedPiece.occupiedBoard, pieceIsFromThisBoard);
+            selectedPiece.occupiedBoard = underworldBoard;
+
+            opponent.GenerateAllPossibleMoves();
+            if (opponent.CheckIfIsAttackingPiece<T>())
+                coordsToRemove.Add(coords);
+            selectedPieceOriginalBoard.UpdateBoardOnPieceMove(selectedPiece.occupiedSquare, coords, selectedPiece, pieceOnCoords, selectedPiece.occupiedBoard, pieceIsFromThisBoard);
+            selectedPiece.occupiedBoard = selectedPieceOriginalBoard;
         }
         foreach(var coords in coordsToRemove)
         {
-            selectedPiece.availableMoves.Remove(coords);
+            selectedPiece.availableGroundMoves.Remove(coords);
         }
     }
 
@@ -91,12 +118,20 @@ public class ChessPlayer
         activePieces.Clear();
     }
 
-    // NOT DONE
+    // MIGHT NOT DONE
     private bool CheckIfIsAttackingPiece<T>() where T : Piece
     {
         foreach (var piece in activePieces)
         {
-            if(groundBoard.HasPiece(piece) && piece.IsAttackingPieceOfType<T>())
+            if(skyBoard.HasPiece(piece) && piece.IsAttackingPieceOfType<T>())
+            {
+                return true;
+            }
+            if (groundBoard.HasPiece(piece) && piece.IsAttackingPieceOfType<T>())
+            {
+                return true;
+            }
+            if (underworldBoard.HasPiece(piece) && piece.IsAttackingPieceOfType<T>())
             {
                 return true;
             }
@@ -109,17 +144,53 @@ public class ChessPlayer
     {
         foreach (var piece in activePieces)
         {
-            foreach (var coords in piece.availableMoves)
+            foreach (var coords in piece.availableSkyMoves)
             {
-                Piece pieceOnCoords = groundBoard.GetPieceOnSquare(coords);
-                groundBoard.UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null);
+                Board pieceOriginalBoard = piece.occupiedBoard;
+                Piece pieceOnCoords = skyBoard.GetPieceOnSquare(coords);
+                bool pieceIsFromThisBoard = (piece.occupiedBoard == skyBoard) ? true : false;
+                skyBoard.UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
                 opponent.GenerateAllPossibleMoves();
                 if (!opponent.CheckIfIsAttackingPiece<T>())
                 {
-                    groundBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, null);
+                    skyBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
+                    piece.occupiedBoard = pieceOriginalBoard;
                     return true;
                 }
-                groundBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, pieceOnCoords);
+                pieceOriginalBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, pieceOnCoords, piece.occupiedBoard, pieceIsFromThisBoard);
+                piece.occupiedBoard = pieceOriginalBoard;
+            }
+            foreach (var coords in piece.availableGroundMoves)
+            {
+                Board pieceOriginalBoard = piece.occupiedBoard;
+                Piece pieceOnCoords = groundBoard.GetPieceOnSquare(coords);
+                bool pieceIsFromThisBoard = (piece.occupiedBoard == groundBoard) ? true : false;
+                groundBoard.UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
+                opponent.GenerateAllPossibleMoves();
+                if (!opponent.CheckIfIsAttackingPiece<T>())
+                {
+                    groundBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
+                    piece.occupiedBoard = pieceOriginalBoard;
+                    return true;
+                }
+                pieceOriginalBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, pieceOnCoords, piece.occupiedBoard, pieceIsFromThisBoard);
+                piece.occupiedBoard = pieceOriginalBoard;
+            }
+            foreach (var coords in piece.availableUnderworldMoves)
+            {
+                Board pieceOriginalBoard = piece.occupiedBoard;
+                Piece pieceOnCoords = underworldBoard.GetPieceOnSquare(coords);
+                bool pieceIsFromThisBoard = (piece.occupiedBoard == underworldBoard) ? true : false;
+                underworldBoard.UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
+                opponent.GenerateAllPossibleMoves();
+                if (!opponent.CheckIfIsAttackingPiece<T>())
+                {
+                    underworldBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
+                    piece.occupiedBoard = pieceOriginalBoard;
+                    return true;
+                }
+                pieceOriginalBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, pieceOnCoords, piece.occupiedBoard, pieceIsFromThisBoard);
+                piece.occupiedBoard = pieceOriginalBoard;
             }
         }
         return false;

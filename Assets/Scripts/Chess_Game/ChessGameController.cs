@@ -10,9 +10,9 @@ public class ChessGameController : MonoBehaviour
     private enum GameState { Init, Play, Finished }
 
     
-    [SerializeField] private Board skyBoard;
-    [SerializeField] private Board groundBoard;
-    [SerializeField] private Board underworldBoard;
+    [SerializeField] public Board skyBoard;
+    [SerializeField] public Board groundBoard;
+    [SerializeField] public Board underworldBoard;
 
     [SerializeField] private BoardLayout skyBoardLayout;
     [SerializeField] private BoardLayout groundBoardLayout;
@@ -67,12 +67,12 @@ public class ChessGameController : MonoBehaviour
         CreatePiecesFromLayout(underworldBoardLayout, underworldBoard);
 
         activePlayer = whitePlayer;
+        skyBoard.GetComponent<ColliderInputReceiver>().enabled = false;
+        underworldBoard.GetComponent<ColliderInputReceiver>().enabled = false;
         activeBoard = groundBoard;
 
         GenerateAllPossiblePlayerMoves(activePlayer);
         SetGameState(GameState.Play);
-        Debug.Log("Game STARTED");
-        //Debug.Log(board.grid[0, 0]);
     }
 
     public void RestartGame()
@@ -129,7 +129,7 @@ public class ChessGameController : MonoBehaviour
     public void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type, Board board)
     {
         Piece newPiece = pieceCreator.CreatePiece(type, board.transform).GetComponent<Piece>();
-        newPiece.SetData(squareCoords, team, board);
+        newPiece.SetData(squareCoords, team, board, skyBoard, groundBoard, underworldBoard);
 
         Material teamMaterial = pieceCreator.GetTeamMaterial(team);
         newPiece.SetMaterial(teamMaterial);
@@ -161,6 +161,7 @@ public class ChessGameController : MonoBehaviour
             ChangeActiveTeam();
     }
 
+    //NOT DONE
     private bool CheckIfGameIsFinished()
     {
         Piece[] kingAttackingPieces = activePlayer.GetPiecesAttackingOppositePieceOfType<King>();
@@ -170,7 +171,7 @@ public class ChessGameController : MonoBehaviour
             Piece attackedKing = oppositePlayer.GetPiecesPiecesOfType<King>().FirstOrDefault();
             oppositePlayer.RemoveMovesEnablingAttackOnPieceOfType<King>(activePlayer, attackedKing);
 
-            int availableKingMoves = attackedKing.availableMoves.Count;
+            int availableKingMoves = attackedKing.availableSkyMoves.Count + attackedKing.availableGroundMoves.Count + attackedKing.availableUnderworldMoves.Count;
             if (availableKingMoves == 0)
             {
                 bool canCoverKing = oppositePlayer.CanHidePieceFromAttack<King>(activePlayer);
@@ -221,22 +222,37 @@ public class ChessGameController : MonoBehaviour
         if (activeBoard == skyBoard)
         {
             if (scroll < 0)
+            {
+                skyBoard.GetComponent<ColliderInputReceiver>().enabled = false;
                 activeBoard = groundBoard;
+                groundBoard.GetComponent<ColliderInputReceiver>().enabled = true;
+            }
         }
         else if (activeBoard == groundBoard)
         {
             if (scroll > 0)
+            {
+                groundBoard.GetComponent<ColliderInputReceiver>().enabled = false;
                 activeBoard = skyBoard;
+                skyBoard.GetComponent<ColliderInputReceiver>().enabled = true;
+            }
             else if (scroll < 0)
+            {
+                groundBoard.GetComponent<ColliderInputReceiver>().enabled = false;
                 activeBoard = underworldBoard;
+                underworldBoard.GetComponent<ColliderInputReceiver>().enabled = true;
+            }
         }
         else if (activeBoard == underworldBoard)
         {
             if (scroll > 0)
+            {
+                underworldBoard.GetComponent<ColliderInputReceiver>().enabled = false;
                 activeBoard = groundBoard;
+                groundBoard.GetComponent<ColliderInputReceiver>().enabled = true;
+            }
         }
 
-        Debug.Log(activeBoard);
     }
 
     public void RemoveMovesEnablingAttackOnPieceOfType<T>(Piece piece) where T : Piece

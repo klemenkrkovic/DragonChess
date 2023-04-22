@@ -13,7 +13,7 @@ public class Board : MonoBehaviour
     [SerializeField] private float squareSize;
 
     public Piece[,] grid;
-    private Piece selectedPiece;
+    private Piece selectedPiece { get; set; }
     private ChessGameController chessController;
     private SquareSelectorCreator squareSelector;
 
@@ -43,18 +43,6 @@ public class Board : MonoBehaviour
 
     private Vector2Int CalculateCoordsFromPosition(Vector3 inputPosition)
     {
-        /*
-        Debug.Log("Y ====================================================================================================");
-        Debug.Log(transform.InverseTransformPoint(inputPosition));
-        Debug.Log(transform.InverseTransformPoint(inputPosition).z / squareSize);
-        Debug.Log(transform.InverseTransformPoint(inputPosition).z / squareSize + (BOARD_SIZE_Y / 2));
-        Debug.Log(Mathf.FloorToInt(transform.InverseTransformPoint(inputPosition).z / squareSize) + (BOARD_SIZE_Y / 2));
-        */
-
-        /*
-        int x = Mathf.FloorToInt(transform.InverseTransformPoint(inputPosition).x / squareSize) + (BOARD_SIZE_X / 2);
-        int y = Mathf.FloorToInt(transform.InverseTransformPoint(inputPosition).z / squareSize) + (BOARD_SIZE_Y / 2);
-        */
         int x = Mathf.FloorToInt(transform.InverseTransformPoint(inputPosition).x / squareSize);
         int y = Mathf.FloorToInt(transform.InverseTransformPoint(inputPosition).z / squareSize);
 
@@ -63,21 +51,50 @@ public class Board : MonoBehaviour
 
     public void OnSquareSelected(Vector3 inputPosition)
     {
-        
-
+        //Debug.Log("OnSquareSelected");
         Vector2Int coords = CalculateCoordsFromPosition(inputPosition);
 
-        //Debug.Log(coords);
-
         Piece piece = GetPieceOnSquare(coords);
-        if (selectedPiece)
+        if (chessController.skyBoard.selectedPiece || chessController.groundBoard.selectedPiece || chessController.underworldBoard.selectedPiece)
         {
+            bool pieceIsFromThisBoard = true;
+            Board oldPieceBoard = this;
+            if (!selectedPiece)
+            {
+                pieceIsFromThisBoard = false;
+                
+                if (chessController.skyBoard.selectedPiece)
+                {
+                    oldPieceBoard = chessController.skyBoard;
+                    selectedPiece = chessController.skyBoard.selectedPiece;
+                    Vector2Int selectedPieceCoords = chessController.skyBoard.selectedPiece.occupiedSquare;
+                    //oldPieceBoard = chessController.skyBoard;
+                }
+                else if (chessController.groundBoard.selectedPiece)
+                {
+                    oldPieceBoard = chessController.groundBoard;
+                    selectedPiece = chessController.groundBoard.selectedPiece;
+                    Vector2Int selectedPieceCoords = chessController.groundBoard.selectedPiece.occupiedSquare;
+                    //oldPieceBoard = chessController.groundBoard;
+                }
+                else if (chessController.underworldBoard.selectedPiece)
+                {
+                    oldPieceBoard = chessController.underworldBoard;
+                    selectedPiece = chessController.underworldBoard.selectedPiece;
+                    Vector2Int selectedPieceCoords = chessController.underworldBoard.selectedPiece.occupiedSquare;
+                    //oldPieceBoard = chessController.underworldBoard;
+                }
+                
+            }
+
             if (piece != null && selectedPiece == piece)
                 DeselectPiece();
             else if (piece != null && selectedPiece != piece && chessController.IsTeamTurnActive(piece.team))
                 SelectPiece(piece);
-            else if (selectedPiece.CanMoveTo(coords))
-                OnSelectedPieceMoved(coords, selectedPiece);
+            else if (selectedPiece.CanMoveTo(coords, this))
+            {
+                OnSelectedPieceMoved(coords, selectedPiece, oldPieceBoard, pieceIsFromThisBoard);
+            }
         }
         else
         {
@@ -96,8 +113,29 @@ public class Board : MonoBehaviour
     {
         chessController.RemoveMovesEnablingAttackOnPieceOfType<King>(piece);
         selectedPiece = piece;
-        List<Vector2Int> selection = selectedPiece.availableMoves;
-        ShowSelectionSquares(selection);
+
+        List<Vector2Int> skySelection = selectedPiece.availableSkyMoves;
+        List<Vector2Int> groundSelection = selectedPiece.availableGroundMoves;
+        List<Vector2Int> underworldSelection = selectedPiece.availableUnderworldMoves;
+
+        if (chessController.activeBoard == chessController.skyBoard)
+        {
+            ShowSelectionSquares(skySelection);
+            chessController.groundBoard.ShowSelectionSquares(groundSelection);
+            chessController.underworldBoard.ShowSelectionSquares(underworldSelection);
+        }
+        else if (chessController.activeBoard == chessController.groundBoard)
+        {
+            ShowSelectionSquares(groundSelection);
+            chessController.skyBoard.ShowSelectionSquares(skySelection);
+            chessController.underworldBoard.ShowSelectionSquares(underworldSelection);
+        }
+        else if (chessController.activeBoard == chessController.underworldBoard)
+        {
+            ShowSelectionSquares(underworldSelection);
+            chessController.groundBoard.ShowSelectionSquares(groundSelection);
+            chessController.skyBoard.ShowSelectionSquares(skySelection);
+        }  
     }
 
     private void ShowSelectionSquares(List<Vector2Int> selection)
@@ -114,32 +152,40 @@ public class Board : MonoBehaviour
 
     private void DeselectPiece()
     {
-        selectedPiece = null;
-        squareSelector.ClearSelection();
+        chessController.skyBoard.selectedPiece = null;
+        chessController.groundBoard.selectedPiece = null;
+        chessController.underworldBoard.selectedPiece = null;
+        chessController.skyBoard.squareSelector.ClearSelection();
+        chessController.groundBoard.squareSelector.ClearSelection();
+        chessController.underworldBoard.squareSelector.ClearSelection();
     }
-    private void OnSelectedPieceMoved(Vector2Int coords, Piece piece)
+    private void OnSelectedPieceMoved(Vector2Int coords, Piece piece, Board oldPieceBoard, bool pieceIsFromThisBoard)
     {
         TryToTakeOppositePiece(coords);
-        UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null);
-        selectedPiece.MovePiece(coords);
+        UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null, oldPieceBoard, pieceIsFromThisBoard);
+        piece.occupiedBoard = this;
+        selectedPiece.MovePiece(coords, this);
         DeselectPiece();
         EndTurn();
     }
 
     private void EndTurn()
     {
-        /*
-        Debug.Log("END OF TURN TEST");
-        Debug.Log(grid[0, 0]);
-        Debug.Log(GetPieceOnSquare(Vector2Int.zero));
-        */
         chessController.EndTurn();
     }
 
-    public void UpdateBoardOnPieceMove(Vector2Int newCoords, Vector2Int oldCoords, Piece newPiece, Piece oldPiece)
+    public void UpdateBoardOnPieceMove(Vector2Int newCoords, Vector2Int oldCoords, Piece newPiece, Piece oldPiece, Board oldPieceBoard, bool pieceIsFromThisBoard)
     {
-        grid[oldCoords.x, oldCoords.y] = oldPiece;
-        grid[newCoords.x, newCoords.y] = newPiece;
+        if (pieceIsFromThisBoard)
+        {
+            grid[oldCoords.x, oldCoords.y] = oldPiece;
+            grid[newCoords.x, newCoords.y] = newPiece;
+        }
+        else
+        {
+            oldPieceBoard.grid[oldCoords.x, oldCoords.y] = oldPiece;
+            grid[newCoords.x, newCoords.y] = newPiece;
+        }
     }
 
     public Piece GetPieceOnSquare(Vector2Int coords)
@@ -179,21 +225,11 @@ public class Board : MonoBehaviour
     }
 
     private void TryToTakeOppositePiece(Vector2Int coords)
-        {
-        
-        //Debug.LogAssertion(grid[coords.x, coords.y]);
+    {
         Piece piece = GetPieceOnSquare(coords);
-        /*
-        Debug.LogWarning("attempt to take");
-        Debug.Log(CheckIfCoordinatesAreOnBoard(coords));
-
-        Debug.Log(coords);
-        Debug.Log(piece);
-        */
 
         if (piece && !selectedPiece.IsFromSameTeam(piece))
         {
-            Debug.Log("success to take");
             TakePiece(piece);
         }
     }
@@ -202,11 +238,9 @@ public class Board : MonoBehaviour
     {
         if (piece)
         {
-
             grid[piece.occupiedSquare.x, piece.occupiedSquare.y] = null;
             chessController.OnPieceRemoved(piece);
             Destroy(piece.gameObject);
-            Debug.Log(piece);
         }
     }
     

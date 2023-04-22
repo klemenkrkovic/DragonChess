@@ -15,29 +15,84 @@ public class King : Piece
         new Vector2Int(0, -1),
         new Vector2Int(1, -1)
     };
-    public override List<Vector2Int> SelectAvailableSquares()
+
+    public override List<Vector2Int> SelectAvailableSkySquares()
     {
-        availableMoves.Clear();
-        float range = 1;
-        foreach (var direction in directions)
+        availableSkyMoves.Clear();
+        if (occupiedBoard == groundBoard)
         {
-            for (int i = 1; i <= range; i++)
+            Vector2Int nextCoords = occupiedSquare;
+            Piece piece = skyBoard.GetPieceOnSquare(nextCoords);
+            if(piece == null)
             {
-                Vector2Int nextCoords = occupiedSquare + direction * i;
-                Piece piece = board.GetPieceOnSquare(nextCoords);
-                if (!board.CheckIfCoordinatesAreOnBoard(nextCoords))
-                    break;
-                if (piece == null)
-                    TryToAddMove(nextCoords);
-                else if (!piece.IsFromSameTeam(this))
-                {
-                    TryToAddMove(nextCoords);
-                    break;
-                }
-                else if (piece.IsFromSameTeam(this))
-                    break;
+                TryToAddSkyMove(nextCoords);
+            }
+            else if (!piece.IsFromSameTeam(this))
+            {
+                TryToAddSkyMove(nextCoords);
             }
         }
-        return availableMoves;
+        return availableSkyMoves;
+    }
+
+    public override List<Vector2Int> SelectAvailableGroundSquares()
+    {
+        availableGroundMoves.Clear();
+        if (occupiedBoard == groundBoard)
+        {
+            float range = 1;
+            foreach (var direction in directions)
+            {
+                for (int i = 1; i <= range; i++)
+                {
+                    Vector2Int nextCoords = occupiedSquare + direction;
+                    Piece piece = groundBoard.GetPieceOnSquare(nextCoords);
+                    if (!groundBoard.CheckIfCoordinatesAreOnBoard(nextCoords))
+                        break;
+                    if (piece == null)
+                        TryToAddGroundMove(nextCoords);
+                    else if (!piece.IsFromSameTeam(this))
+                    {
+                        TryToAddGroundMove(nextCoords);
+                        break;
+                    }
+                    else if (piece.IsFromSameTeam(this))
+                        break;
+                }
+            }
+        }
+        else
+        {
+            Vector2Int nextCoords = occupiedSquare;
+            Piece piece = groundBoard.GetPieceOnSquare(nextCoords);
+            if (piece == null)
+            {
+                TryToAddGroundMove(nextCoords);
+            }
+            else if (!piece.IsFromSameTeam(this))
+            {
+                TryToAddGroundMove(nextCoords);
+            }
+        }
+        return availableGroundMoves;
+    }
+
+    public override List<Vector2Int> SelectAvailableUnderworldSquares()
+    {
+        availableUnderworldMoves.Clear();
+        if (occupiedBoard == groundBoard)
+        {
+            Vector2Int nextCoords = occupiedSquare;
+            Piece piece = underworldBoard.GetPieceOnSquare(nextCoords);
+            if (piece == null)
+            {
+                TryToAddUnderworldMove(nextCoords);
+            }
+            else if (!piece.IsFromSameTeam(this))
+            {
+                TryToAddUnderworldMove(nextCoords);
+            }
+        }
+        return availableUnderworldMoves;
     }
 }

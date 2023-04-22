@@ -15,18 +15,29 @@ public class Knight : Piece
         new Vector2Int(-1, 2),
         new Vector2Int(-1, -2)
     };
-    public override List<Vector2Int> SelectAvailableSquares()
+
+    public override List<Vector2Int> SelectAvailableSkySquares()
     {
-        availableMoves.Clear();
+        return availableSkyMoves;
+    }
+
+    public override List<Vector2Int> SelectAvailableGroundSquares()
+    {
+        availableGroundMoves.Clear();
         for (int i = 0; i < offsets.Length; i++)
         {
             Vector2Int nextCoords = occupiedSquare + offsets[i];
-            Piece piece = board.GetPieceOnSquare (nextCoords);
-            if (!board.CheckIfCoordinatesAreOnBoard(nextCoords))
+            Piece piece = groundBoard.GetPieceOnSquare (nextCoords);
+            if (!groundBoard.CheckIfCoordinatesAreOnBoard(nextCoords))
                 continue;
             if(piece == null || !piece.IsFromSameTeam(this))
-                TryToAddMove(nextCoords);
+                TryToAddGroundMove(nextCoords);
         }
-        return availableMoves;
+        return availableGroundMoves;
+    }
+
+    public override List<Vector2Int> SelectAvailableUnderworldSquares()
+    {
+        return availableUnderworldMoves;
     }
 }

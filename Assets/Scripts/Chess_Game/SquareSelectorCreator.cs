@@ -16,7 +16,11 @@ public class SquareSelectorCreator : MonoBehaviour
         ClearSelection();
         foreach (var data in squareData)
         {
+            
             GameObject selector = Instantiate(selectorPrefab, data.Key, Quaternion.identity, board.transform);
+            Vector3 localPos = selector.transform.localPosition;
+            localPos.y = 0.1f;
+            selector.transform.localPosition = localPos;
             instantiatedSelectors.Add(selector);
             foreach (var setter in selector.GetComponentsInChildren<MaterialSetter>())
             {

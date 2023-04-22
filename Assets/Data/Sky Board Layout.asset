@@ -13,51 +13,9 @@ MonoBehaviour:
   m_Name: Sky Board Layout
   m_EditorClassIdentifier: 
   boardSquares:
-  - position: {x: 1, y: 1}
-    pieceType: 3
-    teamColor: 1
-  - position: {x: 2, y: 1}
-    pieceType: 2
-    teamColor: 1
-  - position: {x: 3, y: 1}
-    pieceType: 1
-    teamColor: 1
-  - position: {x: 4, y: 1}
-    pieceType: 4
-    teamColor: 1
   - position: {x: 5, y: 1}
-    pieceType: 4
+    pieceType: 0
     teamColor: 1
-  - position: {x: 6, y: 1}
-    pieceType: 1
-    teamColor: 1
-  - position: {x: 7, y: 1}
-    pieceType: 2
-    teamColor: 1
-  - position: {x: 8, y: 1}
-    pieceType: 3
-    teamColor: 1
-  - position: {x: 1, y: 8}
-    pieceType: 3
-    teamColor: 0
-  - position: {x: 2, y: 8}
-    pieceType: 2
-    teamColor: 0
-  - position: {x: 3, y: 8}
-    pieceType: 1
-    teamColor: 0
-  - position: {x: 4, y: 8}
-    pieceType: 4
-    teamColor: 0
   - position: {x: 5, y: 8}
-    pieceType: 4
-    teamColor: 0
-  - position: {x: 6, y: 8}
-    pieceType: 1
-    teamColor: 0
-  - position: {x: 7, y: 8}
-    pieceType: 2
-    teamColor: 0
-  - position: {x: 8, y: 8}
-    pieceType: 3
+    pieceType: 0
     teamColor: 0

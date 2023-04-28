@@ -67,22 +67,16 @@ public class Board : MonoBehaviour
                 {
                     oldPieceBoard = chessController.skyBoard;
                     selectedPiece = chessController.skyBoard.selectedPiece;
-                    Vector2Int selectedPieceCoords = chessController.skyBoard.selectedPiece.occupiedSquare;
-                    //oldPieceBoard = chessController.skyBoard;
                 }
                 else if (chessController.groundBoard.selectedPiece)
                 {
                     oldPieceBoard = chessController.groundBoard;
                     selectedPiece = chessController.groundBoard.selectedPiece;
-                    Vector2Int selectedPieceCoords = chessController.groundBoard.selectedPiece.occupiedSquare;
-                    //oldPieceBoard = chessController.groundBoard;
                 }
                 else if (chessController.underworldBoard.selectedPiece)
                 {
                     oldPieceBoard = chessController.underworldBoard;
                     selectedPiece = chessController.underworldBoard.selectedPiece;
-                    Vector2Int selectedPieceCoords = chessController.underworldBoard.selectedPiece.occupiedSquare;
-                    //oldPieceBoard = chessController.underworldBoard;
                 }
                 
             }
@@ -106,7 +100,7 @@ public class Board : MonoBehaviour
     internal void PromotePiece(Piece piece)
     {
         TakePiece(piece);
-        chessController.CreatePieceAndInitialize(piece.occupiedSquare, piece.team, typeof(Queen), this);
+        chessController.CreatePieceAndInitialize(piece.occupiedSquare, piece.team, typeof(Hero), this);
     }
 
     private void SelectPiece(Piece piece)
@@ -162,9 +156,12 @@ public class Board : MonoBehaviour
     private void OnSelectedPieceMoved(Vector2Int coords, Piece piece, Board oldPieceBoard, bool pieceIsFromThisBoard)
     {
         TryToTakeOppositePiece(coords);
-        UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null, oldPieceBoard, pieceIsFromThisBoard);
-        piece.occupiedBoard = this;
-        selectedPiece.MovePiece(coords, this);
+        if (!(this == chessController.groundBoard && selectedPiece.GetType() == typeof(Dragon)))
+        {
+            UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null, oldPieceBoard, pieceIsFromThisBoard);
+            piece.occupiedBoard = this;
+            selectedPiece.MovePiece(coords, this);
+        }
         DeselectPiece();
         EndTurn();
     }

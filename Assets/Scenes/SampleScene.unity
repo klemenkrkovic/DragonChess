@@ -13703,7 +13703,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1205058006034464292, guid: fc447db4382c0cf4eae35d90caa8058e, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1205058006034464292, guid: fc447db4382c0cf4eae35d90caa8058e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14105,7 +14105,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 158480768}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -17693,7 +17693,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1205058006034464292, guid: a5a7b89ef7b307c4c9efcd9f820b8b99, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1205058006034464292, guid: a5a7b89ef7b307c4c9efcd9f820b8b99, type: 3}
       propertyPath: m_LocalPosition.x
@@ -22824,6 +22824,7 @@ MonoBehaviour:
   underworldBoardLayout: {fileID: 11400000, guid: c43478c1d2da5a641b721342b0913fe8, type: 2}
   uIManager: {fileID: 296381485}
   playerCamera: {fileID: 963194227}
+  boardAnchor: {fileID: 1064701530}
   activeBoard: {fileID: 0}
 --- !u!114 &1689250223
 MonoBehaviour:
@@ -22838,12 +22839,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   piecesPrefabs:
-  - {fileID: 190264, guid: cd05c23b470229c44a8d53d6e86225f6, type: 3}
-  - {fileID: 119820, guid: 9e4e635002b6a524ca896adb28e8e388, type: 3}
-  - {fileID: 107724, guid: 7248632fb471af143947a88a47eae959, type: 3}
-  - {fileID: 104878, guid: 48d5ea4ff810d0e4ea36af7235dd5fd7, type: 3}
-  - {fileID: 103078, guid: 6f38c700bedefe64f8364436528e5c3d, type: 3}
-  - {fileID: 114028, guid: 43ef2ba32fda59c42a1410ea490d494b, type: 3}
+  - {fileID: 2218387371568691876, guid: 5453b278c72bdf643ae211aa74ca4a30, type: 3}
+  - {fileID: 319321219300453350, guid: e2fad7d07a2273c4ab67d9d91e0b249f, type: 3}
+  - {fileID: 999191794558752514, guid: fe2c839589b5a994da1182fa1bde2650, type: 3}
+  - {fileID: 3648527446260776095, guid: cd79b8ea169b7e5498e270895aae0cf0, type: 3}
+  - {fileID: 8569951117006050634, guid: 4a971519f71fa6c40a1a94f5de8c4e0d, type: 3}
+  - {fileID: 2292580746126351012, guid: 98246c75fbe530144a198ef2d871ab1b, type: 3}
+  - {fileID: 2341068714891539119, guid: ffd6fdffb4742b34c9599aade3b0c400, type: 3}
+  - {fileID: 7581641708455788407, guid: 19c0a2086d8d50645911d7ccf96190d9, type: 3}
+  - {fileID: 8913959316009137122, guid: 47ed06b5d0e7ffb4fa4273f8fc421f2f, type: 3}
+  - {fileID: 4255665354932123593, guid: 27bdb89a05d53db40924d817ad471a36, type: 3}
+  - {fileID: 6116658680722027670, guid: 91a2f58dfb2aa9449acc7aeb0251daa9, type: 3}
+  - {fileID: 3598095900879170559, guid: b19135b6f74b916458e171b0ed068e7b, type: 3}
+  - {fileID: 5952139192888310413, guid: a47ec9b9ad48133488ea92015a5b169c, type: 3}
+  - {fileID: 8762049920898994221, guid: 4ae4733fe31bb284f9779c7f91482e55, type: 3}
+  - {fileID: 52868580667734345, guid: d6dc6c37c029a1c46aae78728f711558, type: 3}
   blackMaterial: {fileID: 2100000, guid: 398a77fd781734941ae7d684e6412323, type: 2}
   whiteMaterial: {fileID: 2100000, guid: 40d77dd1467301049ae0f2db3f437b6d, type: 2}
 --- !u!4 &1689250224

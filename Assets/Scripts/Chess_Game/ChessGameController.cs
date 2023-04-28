@@ -21,6 +21,7 @@ public class ChessGameController : MonoBehaviour
 
     [SerializeField] private ChessUIManager uIManager;
     [SerializeField] private Camera playerCamera;
+    [SerializeField] private Transform boardAnchor;
 
     private PieceCreator pieceCreator;
     
@@ -84,6 +85,16 @@ public class ChessGameController : MonoBehaviour
         whitePlayer.OnGameRestarted();
         blackPlayer.OnGameRestarted();
         ResetCamera();
+        if (activeBoard == skyBoard)
+        {
+            ChangeActiveBoard(-1);
+            boardAnchor.Translate(Vector3.up * 11);
+        }
+        else if (activeBoard == underworldBoard)
+        {
+            ChangeActiveBoard(1);
+            boardAnchor.Translate(Vector3.up * -11);
+        }
         StartNewGame();
     }
 
@@ -119,7 +130,6 @@ public class ChessGameController : MonoBehaviour
             Vector2Int squareCoords = layout.GetSquareCoordsAtIndex(i);
             TeamColor team = layout.GetSquareTeamColorAtIndex(i);
             string typeName = layout.GetSquarePieceNameAtIndex(i);
-
             Type type = Type.GetType(typeName);
             CreatePieceAndInitialize(squareCoords, team, type, board);
         } 
@@ -165,11 +175,12 @@ public class ChessGameController : MonoBehaviour
     private bool CheckIfGameIsFinished()
     {
         Piece[] kingAttackingPieces = activePlayer.GetPiecesAttackingOppositePieceOfType<King>();
+
         if (kingAttackingPieces.Length > 0)
         {
             ChessPlayer oppositePlayer = GetOpponentToPlayer(activePlayer);
             Piece attackedKing = oppositePlayer.GetPiecesPiecesOfType<King>().FirstOrDefault();
-            oppositePlayer.RemoveMovesEnablingAttackOnPieceOfType<King>(activePlayer, attackedKing);
+            oppositePlayer.RemoveMovesEnablingAttackOnPieceOfType<King>(activePlayer, attackedKing); // PROBLEM HERE
 
             int availableKingMoves = attackedKing.availableSkyMoves.Count + attackedKing.availableGroundMoves.Count + attackedKing.availableUnderworldMoves.Count;
             if (availableKingMoves == 0)

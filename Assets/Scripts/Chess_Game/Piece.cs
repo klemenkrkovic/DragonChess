@@ -49,6 +49,20 @@ public abstract class Piece : MonoBehaviour
         return team == piece.team;
     }
 
+    public bool isFrozen(Piece piece)
+    {
+        if (piece.occupiedBoard == groundBoard)
+        {
+            
+            Piece pieceOnCoords = underworldBoard.grid[piece.occupiedSquare.x, piece.occupiedSquare.y];
+            if (pieceOnCoords != null && pieceOnCoords.GetType() == typeof(Basilisk) && !pieceOnCoords.IsFromSameTeam(piece))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public bool CanMoveTo(Vector2Int coords, Board board)
     {
         if (board == skyBoard)
@@ -61,7 +75,6 @@ public abstract class Piece : MonoBehaviour
         return false;
     }
 
-    //NOT DONE
     public virtual void MovePiece(Vector2Int coords, Board board)
     {
         Vector3 targetPosition = board.CalculatePositionFromCoords(coords);
@@ -86,7 +99,6 @@ public abstract class Piece : MonoBehaviour
         availableUnderworldMoves.Add(coords);
     }
 
-    //MIGHT NOT BE DONE
     public void SetData(Vector2Int coords, TeamColor team, Board board, Board skyBoard, Board groundBoard, Board underworldBoard)
     {
         this.team = team;

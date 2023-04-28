@@ -1,4 +1,4 @@
 public enum PieceType
 {
-    Pawn, Bishop, Knight, Rook, Queen, King
+    Warrior, Thief, Unicorn, Oliphant, Mage, King, Hero, Cleric, Paladin, Dwarf, Elemental, Basilisk, Sylph, Griffon, Dragon
 }

@@ -19,6 +19,10 @@ public class King : Piece
     public override List<Vector2Int> SelectAvailableSkySquares()
     {
         availableSkyMoves.Clear();
+
+        if (isFrozen(this))
+            return availableSkyMoves;
+
         if (occupiedBoard == groundBoard)
         {
             Vector2Int nextCoords = occupiedSquare;
@@ -38,6 +42,11 @@ public class King : Piece
     public override List<Vector2Int> SelectAvailableGroundSquares()
     {
         availableGroundMoves.Clear();
+
+
+        if (isFrozen(this))
+            return availableGroundMoves;
+
         if (occupiedBoard == groundBoard)
         {
             float range = 1;
@@ -66,10 +75,6 @@ public class King : Piece
             Vector2Int nextCoords = occupiedSquare;
             Piece piece = groundBoard.GetPieceOnSquare(nextCoords);
             if (piece == null)
-            {
-                TryToAddGroundMove(nextCoords);
-            }
-            else if (!piece.IsFromSameTeam(this))
             {
                 TryToAddGroundMove(nextCoords);
             }

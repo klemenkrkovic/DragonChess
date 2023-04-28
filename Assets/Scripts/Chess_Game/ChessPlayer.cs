@@ -61,7 +61,9 @@ public class ChessPlayer
 
     public void RemoveMovesEnablingAttackOnPieceOfType<T>(ChessPlayer opponent, Piece selectedPiece) where T : Piece
     {
-        List<Vector2Int> coordsToRemove = new List<Vector2Int>();
+        List<Vector2Int> skyCoordsToRemove = new List<Vector2Int>();
+        List<Vector2Int> groundCoordsToRemove = new List<Vector2Int>();
+        List<Vector2Int> underworldCoordsToRemove = new List<Vector2Int>();
         foreach (var coords in selectedPiece.availableSkyMoves)
         {
             Board selectedPieceOriginalBoard = selectedPiece.occupiedBoard;
@@ -73,7 +75,7 @@ public class ChessPlayer
 
             opponent.GenerateAllPossibleMoves();
             if (opponent.CheckIfIsAttackingPiece<T>())
-                coordsToRemove.Add(coords);
+                skyCoordsToRemove.Add(coords);
             selectedPieceOriginalBoard.UpdateBoardOnPieceMove(selectedPiece.occupiedSquare, coords, selectedPiece, pieceOnCoords, selectedPiece.occupiedBoard, pieceIsFromThisBoard);
             selectedPiece.occupiedBoard = selectedPieceOriginalBoard;
         }
@@ -88,7 +90,7 @@ public class ChessPlayer
 
             opponent.GenerateAllPossibleMoves();
             if (opponent.CheckIfIsAttackingPiece<T>())
-                coordsToRemove.Add(coords);
+                groundCoordsToRemove.Add(coords);
             selectedPieceOriginalBoard.UpdateBoardOnPieceMove(selectedPiece.occupiedSquare, coords, selectedPiece, pieceOnCoords, selectedPiece.occupiedBoard, pieceIsFromThisBoard);
             selectedPiece.occupiedBoard = selectedPieceOriginalBoard;
         }
@@ -103,13 +105,21 @@ public class ChessPlayer
 
             opponent.GenerateAllPossibleMoves();
             if (opponent.CheckIfIsAttackingPiece<T>())
-                coordsToRemove.Add(coords);
+                underworldCoordsToRemove.Add(coords);
             selectedPieceOriginalBoard.UpdateBoardOnPieceMove(selectedPiece.occupiedSquare, coords, selectedPiece, pieceOnCoords, selectedPiece.occupiedBoard, pieceIsFromThisBoard);
             selectedPiece.occupiedBoard = selectedPieceOriginalBoard;
         }
-        foreach(var coords in coordsToRemove)
+        foreach(var coords in skyCoordsToRemove)
+        {
+            selectedPiece.availableSkyMoves.Remove(coords);
+        }
+        foreach (var coords in groundCoordsToRemove)
         {
             selectedPiece.availableGroundMoves.Remove(coords);
+        }
+        foreach (var coords in underworldCoordsToRemove)
+        {
+            selectedPiece.availableUnderworldMoves.Remove(coords);
         }
     }
 
@@ -144,16 +154,16 @@ public class ChessPlayer
     {
         foreach (var piece in activePieces)
         {
+            Board pieceOriginalBoard = piece.occupiedBoard;
             foreach (var coords in piece.availableSkyMoves)
             {
-                Board pieceOriginalBoard = piece.occupiedBoard;
                 Piece pieceOnCoords = skyBoard.GetPieceOnSquare(coords);
                 bool pieceIsFromThisBoard = (piece.occupiedBoard == skyBoard) ? true : false;
                 skyBoard.UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
                 opponent.GenerateAllPossibleMoves();
                 if (!opponent.CheckIfIsAttackingPiece<T>())
                 {
-                    skyBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
+                    skyBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, pieceOnCoords, piece.occupiedBoard, pieceIsFromThisBoard);
                     piece.occupiedBoard = pieceOriginalBoard;
                     return true;
                 }
@@ -162,14 +172,13 @@ public class ChessPlayer
             }
             foreach (var coords in piece.availableGroundMoves)
             {
-                Board pieceOriginalBoard = piece.occupiedBoard;
                 Piece pieceOnCoords = groundBoard.GetPieceOnSquare(coords);
                 bool pieceIsFromThisBoard = (piece.occupiedBoard == groundBoard) ? true : false;
                 groundBoard.UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
                 opponent.GenerateAllPossibleMoves();
                 if (!opponent.CheckIfIsAttackingPiece<T>())
                 {
-                    groundBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
+                    groundBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, pieceOnCoords, piece.occupiedBoard, pieceIsFromThisBoard);
                     piece.occupiedBoard = pieceOriginalBoard;
                     return true;
                 }
@@ -178,14 +187,13 @@ public class ChessPlayer
             }
             foreach (var coords in piece.availableUnderworldMoves)
             {
-                Board pieceOriginalBoard = piece.occupiedBoard;
                 Piece pieceOnCoords = underworldBoard.GetPieceOnSquare(coords);
                 bool pieceIsFromThisBoard = (piece.occupiedBoard == underworldBoard) ? true : false;
                 underworldBoard.UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
                 opponent.GenerateAllPossibleMoves();
                 if (!opponent.CheckIfIsAttackingPiece<T>())
                 {
-                    underworldBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, null, piece.occupiedBoard, pieceIsFromThisBoard);
+                    underworldBoard.UpdateBoardOnPieceMove(piece.occupiedSquare, coords, piece, pieceOnCoords, piece.occupiedBoard, pieceIsFromThisBoard);
                     piece.occupiedBoard = pieceOriginalBoard;
                     return true;
                 }

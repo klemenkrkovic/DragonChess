@@ -165,6 +165,10 @@ public class Paladin : Piece
     public override List<Vector2Int> SelectAvailableUnderworldSquares()
     {
         availableUnderworldMoves.Clear();
+
+        if (isFrozen(this))
+            return availableUnderworldMoves;
+
         if (occupiedBoard == underworldBoard)
         {
             float range = 1;

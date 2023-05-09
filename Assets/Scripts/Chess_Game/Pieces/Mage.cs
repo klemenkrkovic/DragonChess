@@ -180,6 +180,9 @@ public class Mage : Piece
     {
         availableUnderworldMoves.Clear();
 
+        if (isFrozen(this))
+            return availableUnderworldMoves;
+
         if (occupiedBoard == underworldBoard)
         {
             foreach (var directionX in directionsX)

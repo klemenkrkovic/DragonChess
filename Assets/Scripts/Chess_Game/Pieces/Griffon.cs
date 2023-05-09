@@ -92,15 +92,20 @@ public class Griffon : Piece
         }
         else if (occupiedBoard == skyBoard)
         {
-            Vector2Int nextCoords = occupiedSquare;
-            Piece piece = groundBoard.GetPieceOnSquare(nextCoords);
-            if (piece == null)
+            float range = 1;
+            foreach (var direction in directions_diagonal)
             {
-                TryToAddGroundMove(nextCoords);
-            }
-            else if (!piece.IsFromSameTeam(this))
-            {
-                TryToAddGroundMove(nextCoords);
+                for (int i = 1; i <= range; i++)
+                {
+                    Vector2Int nextCoords = occupiedSquare + direction * i;
+                    Piece piece = groundBoard.GetPieceOnSquare(nextCoords);
+                    if (!groundBoard.CheckIfCoordinatesAreOnBoard(nextCoords))
+                        break;
+                    if (piece == null)
+                        TryToAddGroundMove(nextCoords);
+                    else if (!piece.IsFromSameTeam(this))
+                        TryToAddGroundMove(nextCoords);
+                }
             }
         }
         return availableGroundMoves;

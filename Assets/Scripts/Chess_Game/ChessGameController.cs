@@ -8,6 +8,7 @@ using UnityEngine;
 public class ChessGameController : MonoBehaviour
 {
     private enum GameState { Init, Play, Finished }
+    private enum TypeOfGameFinish { Ongoing, Checkmate, Stalemate }
 
     
     [SerializeField] public Board skyBoard;
@@ -31,6 +32,7 @@ public class ChessGameController : MonoBehaviour
     private ChessPlayer activePlayer;
     public Board activeBoard;
     private GameState state;
+    private TypeOfGameFinish typeOfGameFinish;
 
     private void Awake()
     {
@@ -73,6 +75,7 @@ public class ChessGameController : MonoBehaviour
         activeBoard = groundBoard;
 
         GenerateAllPossiblePlayerMoves(activePlayer);
+        typeOfGameFinish = TypeOfGameFinish.Ongoing;
         SetGameState(GameState.Play);
     }
 
@@ -140,6 +143,10 @@ public class ChessGameController : MonoBehaviour
     {
         Piece newPiece = pieceCreator.CreatePiece(type, board.transform).GetComponent<Piece>();
         newPiece.SetData(squareCoords, team, board, skyBoard, groundBoard, underworldBoard);
+        if (newPiece.team == TeamColor.Black)
+        {
+            newPiece.transform.Rotate(0, 180, 0, Space.World);
+        }
 
         Material teamMaterial = pieceCreator.GetTeamMaterial(team);
         newPiece.SetMaterial(teamMaterial);
@@ -171,24 +178,33 @@ public class ChessGameController : MonoBehaviour
             ChangeActiveTeam();
     }
 
-    //NOT DONE
     private bool CheckIfGameIsFinished()
     {
         Piece[] kingAttackingPieces = activePlayer.GetPiecesAttackingOppositePieceOfType<King>();
 
+        // NOT DONE NEED TO ADD STALEMATE
+        ChessPlayer oppositePlayer = GetOpponentToPlayer(activePlayer);
+
         if (kingAttackingPieces.Length > 0)
-        {
-            ChessPlayer oppositePlayer = GetOpponentToPlayer(activePlayer);
+        {  
             Piece attackedKing = oppositePlayer.GetPiecesPiecesOfType<King>().FirstOrDefault();
-            oppositePlayer.RemoveMovesEnablingAttackOnPieceOfType<King>(activePlayer, attackedKing); // PROBLEM HERE
+            oppositePlayer.RemoveMovesEnablingAttackOnPieceOfType<King>(activePlayer, attackedKing);
 
             int availableKingMoves = attackedKing.availableSkyMoves.Count + attackedKing.availableGroundMoves.Count + attackedKing.availableUnderworldMoves.Count;
             if (availableKingMoves == 0)
             {
                 bool canCoverKing = oppositePlayer.CanHidePieceFromAttack<King>(activePlayer);
                 if (!canCoverKing)
+                {
+                    typeOfGameFinish = TypeOfGameFinish.Checkmate;
                     return true;
+                }
             }
+        }
+        if (!oppositePlayer.canMove())
+        {
+            typeOfGameFinish = TypeOfGameFinish.Stalemate;
+            return true;
         }
 
         return false;
@@ -202,7 +218,10 @@ public class ChessGameController : MonoBehaviour
 
     private void EndGame()
     {
-        uIManager.OnGameFinished(activePlayer.team.ToString());
+        if (typeOfGameFinish == TypeOfGameFinish.Checkmate)
+            uIManager.OnGameFinished(activePlayer.team.ToString() + " won");
+        else if (typeOfGameFinish == TypeOfGameFinish.Stalemate)
+            uIManager.OnGameFinished("Stalemate");
         SetGameState(GameState.Finished);
     }
 

@@ -77,6 +77,9 @@ public class Dwarf : Piece
     {
         availableUnderworldMoves.Clear();
 
+        if (isFrozen(this))
+            return availableUnderworldMoves;
+
         if (occupiedBoard == underworldBoard)
         {
             Vector2Int moveDirection = team == TeamColor.White ? Vector2Int.up : Vector2Int.down;

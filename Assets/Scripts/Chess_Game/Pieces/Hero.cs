@@ -92,6 +92,10 @@ public class Hero : Piece
     public override List<Vector2Int> SelectAvailableUnderworldSquares()
     {
         availableUnderworldMoves.Clear();
+
+        if (isFrozen(this))
+            return availableUnderworldMoves;
+
         if (occupiedBoard == groundBoard)
         {
             float range = 1;

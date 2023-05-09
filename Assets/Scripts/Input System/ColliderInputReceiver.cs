@@ -27,7 +27,6 @@ public class ColliderInputReceiver : InputReceiver
 
     public override void OnInputReceived()
     {
-        //Debug.Log("OnInputReceived CALLED");
         foreach (var handler in inputHandlers)
         {
             handler.ProcessInput(clickPosition, null, null);

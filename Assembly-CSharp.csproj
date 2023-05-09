@@ -68,7 +68,7 @@
     <Compile Include="Assets\Scripts\Chess_Game\Pieces\Hero.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\SquareSelectorCreator.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\Pieces\Dwarf.cs" />
-    <Compile Include="Assets\ChessUIManager.cs" />
+    <Compile Include="Assets\Scripts\ChessUIManager.cs" />
     <Compile Include="Assets\Scripts\Input System\ScrollInputReceiver.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\Pieces\Elemental.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\Pieces\Unicorn.cs" />
@@ -87,13 +87,13 @@
     <Compile Include="Assets\Scripts\Chess_Game\Pieces\Sylph.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\Board.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\Pieces\Cleric.cs" />
+    <Compile Include="Assets\Scripts\Chess_Game\PiecesCreator1.cs" />
     <Compile Include="Assets\Scripts\Tweeners\ArcTweener.cs" />
     <Compile Include="Assets\Scripts\Input System\AudioInputHandler.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\Pieces\Thief.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\Pieces\Dragon.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\Pieces\Griffon.cs" />
     <Compile Include="Assets\Scripts\Chess_Game\ChessPlayer.cs" />
-    <Compile Include="Assets\Scripts\Chess_Game\PiecesCreator.cs" />
     <Compile Include="Assets\Scripts\Tweeners\IObjectTweener.cs" />
     <Compile Include="Assets\Scripts\Input System\InputReceiver.cs" />
   </ItemGroup>

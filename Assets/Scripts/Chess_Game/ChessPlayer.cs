@@ -11,7 +11,6 @@ public class ChessPlayer
     public Board groundBoard { get; set; }
     public Board underworldBoard { get; set; }
     public List<Piece> activePieces { get; private set; }
-
     public Vector3 cameraPosition { get; set; }
 
 
@@ -46,6 +45,19 @@ public class ChessPlayer
             piece.SelectAvailableGroundSquares();
             piece.SelectAvailableUnderworldSquares();
         }
+    }
+    internal bool canMove()
+    {
+        foreach(var piece in activePieces)
+        {
+            if (piece.availableGroundMoves.Count() > 0)
+                return true;
+            if (piece.availableSkyMoves.Count() > 0)
+                return true;
+            if (piece.availableUnderworldMoves.Count() > 0)
+                return true;
+        }
+        return false;
     }
 
     public Piece[] GetPiecesAttackingOppositePieceOfType<T>() where T : Piece
@@ -149,7 +161,6 @@ public class ChessPlayer
         return false;
     }
 
-    // NOT DONE
     internal bool CanHidePieceFromAttack<T>(ChessPlayer opponent) where T : Piece
     {
         foreach (var piece in activePieces)

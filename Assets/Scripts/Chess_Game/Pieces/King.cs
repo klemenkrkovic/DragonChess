@@ -85,6 +85,10 @@ public class King : Piece
     public override List<Vector2Int> SelectAvailableUnderworldSquares()
     {
         availableUnderworldMoves.Clear();
+
+        if (isFrozen(this))
+            return availableUnderworldMoves;
+
         if (occupiedBoard == groundBoard)
         {
             Vector2Int nextCoords = occupiedSquare;

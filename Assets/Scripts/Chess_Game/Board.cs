@@ -51,7 +51,6 @@ public class Board : MonoBehaviour
 
     public void OnSquareSelected(Vector3 inputPosition)
     {
-        //Debug.Log("OnSquareSelected");
         Vector2Int coords = CalculateCoordsFromPosition(inputPosition);
 
         Piece piece = GetPieceOnSquare(coords);

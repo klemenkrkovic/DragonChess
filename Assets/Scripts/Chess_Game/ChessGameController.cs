@@ -79,6 +79,15 @@ public class ChessGameController : MonoBehaviour
         SetGameState(GameState.Play);
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+    }
+
     public void RestartGame()
     {
         DestroyPieces();
